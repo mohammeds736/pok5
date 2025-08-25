@@ -3,505 +3,545 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Jaafar Al‑Sayed Poker – الإصدار المحسّن</title>
+  <title>بوكر احترافي — إصدار التحقق الحيوي والكوينز</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
   <style>
-    :root{
-      --bg-1:#0b1020;--bg-2:#101e3a;--ink:#eef3ff;--muted:#b8c1d9;
-      --brand-1:#36d1dc; /* cyan */
-      --brand-2:#5b86e5; /* blue/purple */
-      --accent:#8a2be2;  /* electric violet */
-      --ok:#30d158;--warn:#ffd60a;--bad:#ff375f;
-      --ring:#5b86e5;
+    :root {
+      /* ثيم جديد (بدون ذهبي) — نيوون سماوي/بنفسجي */
+      --primary: #46e6ff;
+      --primary-2: #7c4dff;
+      --accent: #00f5a0;
+      --dark-0: #060a12;
+      --dark-1: #0a1220;
+      --dark-2: #0f1b2e;
+      --text: #eaf7ff;
+      --danger: #ff4d6d;
+      --warning: #ffb703;
+      --ok: #3ef08b;
     }
-    *{box-sizing:border-box}
-    body{margin:0;background:radial-gradient(1200px 800px at 20% -10%,rgba(54,209,220,.15),transparent 60%),radial-gradient(900px 700px at 120% 30%,rgba(91,134,229,.18),transparent 60%),linear-gradient(135deg,var(--bg-1),var(--bg-2));color:var(--ink);font-family:"Segoe UI",Tahoma,Arial,sans-serif;min-height:100vh;overflow-x:hidden}
-    .container{width:min(1400px,100%);margin-inline:auto;padding:20px}
 
-    /* ===== Brand Header ===== */
-    .logo-wrap{display:grid;place-items:center;gap:8px;margin:14px 0 8px}
-    .logo{font-weight:800;letter-spacing:.5px;font-size:clamp(28px,4vw,40px);padding:10px 22px;border-radius:16px;background:linear-gradient(90deg,var(--brand-1),var(--brand-2));-webkit-background-clip:text;background-clip:text;color:transparent;position:relative}
-    .logo::after{content:"";position:absolute;inset:-2px;border-radius:18px;padding:1px;background:linear-gradient(90deg,rgba(54,209,220,.5),rgba(91,134,229,.5));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:ring 6s linear infinite}
-    @keyframes ring{0%{filter:hue-rotate(0)}100%{filter:hue-rotate(360deg)}}
-    .sub{color:var(--muted);font-size:14px}
+    * { box-sizing: border-box; font-family: ui-rounded, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; }
+    body { margin:0; color: var(--text); background: radial-gradient(1200px 800px at 70% 10%, #16233e, var(--dark-0) 60%),
+                                 conic-gradient(from 180deg at 120% -10%, rgba(70,230,255,.18), rgba(124,77,255,.15), rgba(0,245,160,.12), rgba(70,230,255,.18));
+           min-height:100vh; overflow-x:hidden; }
 
-    /* ===== Cards & Panels ===== */
-    .card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(8px);border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+    /* خطوط نيون متحركة بالخلفية */
+    .bg-lines { position: fixed; inset: 0; pointer-events: none; z-index:-1; }
+    .bg-lines::before, .bg-lines::after { content:""; position:absolute; width:160%; height:3px; left:-30%; background: linear-gradient(90deg, transparent, var(--primary), transparent); filter: blur(1px); opacity:.6; }
+    .bg-lines::before { top:20%; animation: scan 6s linear infinite; }
+    .bg-lines::after  { top:70%; animation: scan 9s linear infinite reverse; }
+    @keyframes scan { 0%{ transform: translateX(-20%) rotate(2deg);} 100%{ transform: translateX(20%) rotate(2deg);} }
 
-    /* ===== Animated Auth (non‑gold palette) ===== */
-    .auth{max-width:640px;margin:18px auto;padding:22px 22px 26px;position:relative;overflow:hidden}
-    .auth::before{content:"";position:absolute;inset:-40%;background:conic-gradient(from 0deg,transparent 0 290deg,rgba(54,209,220,.45) 320deg,transparent),radial-gradient(800px 400px at -10% 20%,rgba(91,134,229,.22),transparent 60%);filter:blur(30px);animation:spin 18s linear infinite}
-    @keyframes spin{to{transform:rotate(1turn)}}
-    .auth h2{position:relative;margin:0 0 14px;font-size:24px;color:#e8f0ff}
-    .grid{display:grid;gap:14px}
-    .grid.two{grid-template-columns:1fr 1fr}
-    label{font-size:14px;color:#dfe6ff}
-    input[type="text"],input[type="email"],input[type="tel"],select{width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.16);background:rgba(0,0,0,.25);color:#fff;outline:none;transition:.2s}
-    input:focus,select:focus{border-color:var(--ring);box-shadow:0 0 0 3px rgba(91,134,229,.25)}
-    .radio-row{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
-    .radio{display:flex;gap:8px;align-items:center;padding:8px 10px;border:1px solid rgba(255,255,255,.12);border-radius:10px}
-    .file{position:relative;padding:12px;border:1px dashed rgba(255,255,255,.25);border-radius:12px}
-    .file input[type="file"]{width:100%}
+    .container { width:100%; max-width:1280px; margin:0 auto; padding:20px; }
 
-    .btn{cursor:pointer;border:0;border-radius:12px;padding:12px 16px;font-weight:700}
-    .btn-primary{background:linear-gradient(90deg,var(--brand-1),var(--brand-2));color:#01030a;box-shadow:0 10px 25px rgba(91,134,229,.35);transition:.2s}
-    .btn-primary:hover{transform:translateY(-1px)}
-    .btn-outline{background:transparent;border:1px solid rgba(255,255,255,.18);color:#e7ecff}
+    /* شعار */
+    .logo-wrap { text-align:center; margin:14px 0 10px; }
+    .logo {
+      display:inline-block; padding:14px 26px; border-radius:18px;
+      background: radial-gradient(120px 60px at 10% 10%, rgba(124,77,255,.35), transparent 60%), rgba(255,255,255,.04);
+      border:1px solid rgba(124,77,255,.45); box-shadow: 0 0 24px rgba(70,230,255,.25) inset, 0 0 30px rgba(0,245,160,.14);
+      color:var(--primary); font-size:clamp(22px,4vw,36px); font-weight:800; letter-spacing:.5px;
+      position:relative; overflow:hidden; isolation:isolate;
+    }
+    .logo::after { content:""; position:absolute; inset:-1px; border-radius:inherit; background:
+        conic-gradient(from 0deg, transparent 0 20%, rgba(70,230,255,.18), transparent 35% 60%, rgba(124,77,255,.2), transparent 80%);
+      filter:blur(8px); animation: halo 8s linear infinite; opacity:.6; z-index:-1; }
+    @keyframes halo { to { transform: rotate(360deg); } }
+    .logo-sub { margin-top:8px; color:#bdeeff; opacity:.9; }
 
-    .muted{color:var(--muted)}
+    /* بطاقات/أزرار عامة */
+    .card { background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)); border:1px solid rgba(70,230,255,.25);
+            border-radius:18px; box-shadow: 0 10px 30px rgba(0,0,0,.35), 0 0 24px rgba(124,77,255,.12) inset; }
+    .btn { display:inline-flex; align-items:center; justify-content:center; gap:10px; padding:12px 18px; border-radius:12px; cursor:pointer; font-weight:700; border:none;
+           color:#001017; background: linear-gradient(90deg, var(--primary), var(--accent)); box-shadow:0 8px 24px rgba(0,245,160,.25);
+           transition: transform .2s ease, box-shadow .2s ease, filter .2s ease; }
+    .btn:hover { transform: translateY(-2px); box-shadow:0 12px 28px rgba(70,230,255,.35); filter:saturate(1.1); }
+    .btn.secondary { background: linear-gradient(90deg, #8ab4ff, #a78bfa); color:#060a12; }
+    .btn.ghost { background: transparent; color: var(--primary); border:1px dashed rgba(70,230,255,.4); }
 
-    .row{display:flex;gap:18px;flex-wrap:wrap}
+    /* نموذج التسجيل (ثيم جديد + متحرك) */
+    .auth { max-width: 560px; margin: 20px auto; padding: 28px; position:relative; }
+    .auth::before { content:""; position:absolute; inset:-2px; border-radius:20px; background: conic-gradient(from var(--a), var(--primary) 0 20%, transparent 20% 40%, var(--primary-2) 40% 60%, transparent 60% 80%, var(--accent) 80% 100%);
+      filter: blur(14px); z-index:-1; animation: borderSpin 10s linear infinite; opacity:.55; }
+    @keyframes borderSpin { to { --a: 360deg; } }
+    .auth h2 { text-align:center; margin:6px 0 18px; color:var(--primary); }
+    .form-group { margin-bottom: 14px; }
+    label { display:block; margin-bottom:7px; color:#bfeaff; font-weight:700; }
+    input[type="text"], input[type="email"], input[type="tel"], select, input[type="file"] {
+      width:100%; padding:14px 12px; border-radius:12px; border:1px solid rgba(124,77,255,.35); background: rgba(3,8,18,.65);
+      color:var(--text); outline: none; transition: box-shadow .2s ease, border-color .2s ease; }
+    input:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(70,230,255,.18); }
 
-    /* Webcam & Liveness */
-    .cam{border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.12);position:relative}
-    .cam video{width:100%;height:260px;object-fit:cover;background:#000}
-    .chip{display:inline-flex;align-items:center;gap:8px;font-size:12px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);padding:8px 10px;border-radius:999px}
-    .steps{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-    .step{font-size:12px;padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.05)}
-    .step.done{background:rgba(48,209,88,.18);border-color:rgba(48,209,88,.35)}
+    .row { display:flex; gap:12px; }
+    .row > * { flex:1; }
 
-    /* Main layout */
-    .main{display:none;margin-top:20px}
-    .main-wrap{display:flex;gap:22px}
-    .sidebar{width:280px}
-    .profile{padding:18px;text-align:center}
-    .avatar{width:90px;height:90px;margin:0 auto 10px;border-radius:50%;border:2px solid rgba(255,255,255,.2);display:grid;place-items:center;background:rgba(255,255,255,.05)}
+    .radio-row { display:flex; gap:16px; align-items:center; flex-wrap:wrap; }
+    .radio-row label { display:inline-flex; align-items:center; gap:8px; margin:0; font-weight:600; color:#d9f3ff; }
 
-    .menu{display:grid;gap:10px;margin-top:12px}
-    .menu button{justify-content:flex-start;display:flex;gap:10px;align-items:center}
+    .divider { height:1px; background: linear-gradient(90deg, transparent, rgba(124,77,255,.35), transparent); margin:16px 0; }
 
-    /* Poker table backgrounds per level */
-    .table-wrap{flex:1}
-    .table{height:520px;border-radius:22px;position:relative;overflow:hidden;border:2px solid rgba(255,255,255,.12)}
-    .table:after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 30%,rgba(255,255,255,.08),transparent 45%),radial-gradient(800px 400px at 80% 120%,rgba(91,134,229,.14),transparent 60%);pointer-events:none}
+    /* مودال التحقق الحيوي */
+    .modal { position: fixed; inset:0; display:none; align-items:center; justify-content:center; padding:20px; background: rgba(0,0,0,.6); z-index:1000; }
+    .modal.open { display:flex; }
+    .modal .box { width:min(720px,95vw); padding:18px; }
+    .modal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+    .badge { display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px; background: rgba(0,245,160,.15); color:var(--ok); border:1px solid rgba(0,245,160,.35); font-weight:700; }
+    .steps { display:flex; gap:8px; flex-wrap:wrap; margin:8px 0 10px; }
+    .step { padding:6px 10px; border-radius:10px; border:1px dashed rgba(70,230,255,.35); color:#bfeaff; }
 
-    /* Beginner – green felt */
-    .felt-beginner{background:conic-gradient(from 180deg at 40% 40%,#0c5d2e,#0a8a45,#0e6a36,#0c5d2e);}
-    /* Intermediate – royal blue */
-    .felt-intermediate{background:radial-gradient(1200px 600px at 50% -20%,#0e3a7a,#0b2358 60%) }
-    /* Advanced – crimson */
-    .felt-advanced{background:radial-gradient(1100px 700px at -10% 10%,#640d14,#3d0b0f 55%)}
-    /* King – black marble with gold rim */
-    .felt-king{background:linear-gradient(135deg,#0b0b12,#16161d);}
-    .gold-rim{position:absolute;inset:16px;border-radius:32px;border:6px double rgba(255,215,0,.65);box-shadow:0 0 40px rgba(255,215,0,.25) inset}
+    .video-wrap { position:relative; border-radius:16px; overflow:hidden; border:1px solid rgba(70,230,255,.3); }
+    video { width:100%; display:block; background:#000; }
+    canvas.capture { position:absolute; inset:auto 12px 12px auto; width:140px; height:100px; border:1px solid rgba(255,255,255,.25); border-radius:8px; background:#111; }
 
-    /* Players placeholders */
-    .players{position:absolute;inset:0;display:grid;place-items:center}
+    .prompt { margin-top:10px; font-size:1.05rem; color:#cfefff; }
 
-    /* Wallet */
-    .wallet{padding:18px}
-    .balance{display:grid;place-items:center;padding:18px;border-radius:16px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04)}
-    .balance .num{font-size:32px;margin-top:6px;font-weight:800}
+    .actions { display:flex; gap:10px; justify-content:flex-end; margin-top:12px; }
 
-    .offers{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px;margin-top:14px}
-    .coin-card{position:relative;isolation:isolate;padding:16px;border-radius:16px;border:1px solid rgba(255,255,255,.15);background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));box-shadow:0 10px 25px rgba(0,0,0,.25)}
-    .coin3d{width:84px;height:84px;margin:auto 0 10px;position:relative;transform-style:preserve-3d;animation:flip 3.6s linear infinite}
-    @keyframes flip{to{transform:rotateY(1turn)}}
-    .coin3d .face{position:absolute;inset:0;border-radius:50%}
-    .coin3d .front{background:radial-gradient(circle at 40% 35%,#fff7cc,#ffd24a 40%,#c29218 70%,#7a5a0d);transform:translateZ(6px);border:2px solid #f3d36b}
-    .coin3d .back{background:radial-gradient(circle at 60% 65%,#fff7cc,#ffd24a 40%,#c29218 70%,#7a5a0d);transform:rotateY(180deg) translateZ(6px);border:2px solid #f3d36b}
-    .coin3d .edge{position:absolute;inset:-2px;border-radius:50%;background:repeating-linear-gradient(90deg,#c79a2b 0 6px,#a97d1a 6px 10px);transform:translateZ(0);}
-    .coin-title{font-weight:800}
-    .coin-price{opacity:.9}
-    .buy{margin-top:10px;width:100%}
+    /* الصفحة الرئيسية */
+    .main { display:none; margin-top:24px; }
+    .layout { display:flex; gap:18px; }
+    .sidebar { width:280px; padding:18px; }
+    .menu-item { display:flex; align-items:center; gap:10px; padding:12px 14px; margin-bottom:10px; border-radius:12px; cursor:pointer;
+                 background: rgba(255,255,255,.03); border:1px solid rgba(124,77,255,.25); transition: transform .15s ease, background .2s ease; }
+    .menu-item:hover { transform: translateX(-4px); background: rgba(124,77,255,.10); }
 
-    /* Game controls */
-    .controls{position:absolute;inset:auto 0 14px;display:flex;gap:10px;justify-content:center}
+    .profile { text-align:center; padding-bottom:12px; border-bottom:1px dashed rgba(124,77,255,.35); margin-bottom:12px; }
+    .avatar { width:92px; height:92px; border-radius:50%; margin:0 auto 8px; background: radial-gradient(circle at 30% 20%, #7c4dff 0 15%, #193459 16% 100%);
+              display:grid; place-items:center; border:1px solid rgba(70,230,255,.35); overflow:hidden; }
+    .avatar img { width:100%; height:100%; object-fit:cover; display:block; }
+    .balance { margin-top:6px; color:#bfeaff; }
 
-    /* Pages */
-    .page{display:none}
+    /* طاولة البوكر العامة */
+    .table-wrap { flex:1; min-height:540px; position:relative; }
+    .table-svg { width:100%; height:540px; border-radius:18px; overflow:hidden; border:1px solid rgba(70,230,255,.25); box-shadow: 0 14px 44px rgba(0,0,0,.45); }
 
-    @media (max-width:1024px){.main-wrap{flex-direction:column}.sidebar{width:100%}.table{height:420px}}
+    /* ثيمات الطاولات لكل مستوى */
+    .tbl-beginner { background:
+      radial-gradient(800px 400px at 50% 50%, #0e5a2f 0 40%, #073d1f 60%),
+      repeating-linear-gradient(45deg, rgba(255,255,255,.02) 0 8px, rgba(255,255,255,.03) 8px 16px);
+    }
+    .tbl-intermediate { background:
+      radial-gradient(800px 400px at 50% 50%, #0d3c6b 0 40%, #082846 60%),
+      repeating-linear-gradient(45deg, rgba(255,255,255,.02) 0 8px, rgba(255,255,255,.03) 8px 16px);
+    }
+    .tbl-advanced { background:
+      radial-gradient(800px 400px at 50% 50%, #5e1420 0 40%, #3a0c14 60%),
+      repeating-linear-gradient(45deg, rgba(255,255,255,.02) 0 8px, rgba(255,255,255,.03) 8px 16px);
+    }
+    .tbl-king { background:
+      radial-gradient(800px 400px at 50% 50%, #0e0f13 0 40%, #0a0a0c 60%),
+      url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="%23aaaaaa"/><stop offset="1" stop-color="%23666666"/></linearGradient></defs><g opacity=".14"><rect width="200" height="200" fill="url(%23g)"/></g></svg>');
+      background-blend-mode: overlay; }
+
+    /* لوغو الطاولة */
+    .center-badge { position:absolute; inset:0; display:grid; place-items:center; pointer-events:none; }
+    .center-badge .ring { width:160px; height:160px; border-radius:50%; border:2px dashed rgba(70,230,255,.45); display:grid; place-items:center; animation: spin 14s linear infinite; }
+    .center-badge .ring > div { width:110px; height:110px; border-radius:50%; border:1px solid rgba(124,77,255,.45); display:grid; place-items:center; box-shadow: inset 0 0 28px rgba(124,77,255,.25); color:#cfefff; font-weight:800; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* صفحة المحفظة */
+    .wallet { display:none; }
+    .wallet .balance-card { text-align:center; padding:22px; }
+    .amount { font-size:2.2rem; font-weight:800; color:var(--primary); }
+
+    .offers { display:grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap:16px; margin-top:16px; }
+    .offer { position:relative; padding:16px; text-align:center; cursor:pointer; overflow:hidden; }
+    .offer:hover { transform: translateY(-6px); transition: transform .2s ease; }
+
+    /* عملة كوين متوهجة ومتقلبة */
+    .coin { width:84px; height:84px; margin:6px auto 10px; position:relative; animation: wobble 2.2s ease-in-out infinite; }
+    @keyframes wobble { 0%,100%{ transform: rotateY(0) } 50%{ transform: rotateY(25deg) } }
+    .coin svg { width:100%; height:100%; filter: drop-shadow(0 0 10px rgba(70,230,255,.35)); }
+    .offer-amt { font-size:1.6rem; font-weight:800; color:#d7f8ff; }
+    .offer-price { margin-top:6px; font-weight:700; color:#99d6ff; }
+
+    /* صفحات عامة */
+    .page { display:none; padding:18px; }
+
+    /* أزرار اللعب */
+    .controls { position:absolute; left:50%; bottom:16px; transform:translateX(-50%); display:flex; gap:10px; }
+
+    /* مستويات */
+    .levels { display:grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap:16px; margin-top:10px; }
+    .level { padding:18px; text-align:center; cursor:pointer; }
+    .level h3 { margin:8px 0; color:#d7f8ff; }
+    .level .info { display:flex; justify-content:space-around; margin-top:8px; color:#bde7ff; font-weight:700; }
+
+    /* تنبيهات صغيرة */
+    .toast { position: fixed; bottom: 16px; right: 16px; background: rgba(3,10,22,.8); border:1px solid rgba(70,230,255,.3); padding:10px 14px; border-radius:10px; display:none; z-index: 2000; }
+    .toast.show { display:block; animation: fadeToast 2.8s ease forwards; }
+    @keyframes fadeToast { 0%{ opacity:0; transform: translateY(10px);} 15%{ opacity:1; transform: translateY(0);} 85%{ opacity:1;} 100%{ opacity:0; transform: translateY(10px);} }
+
+    @media (max-width: 980px){ .layout{ flex-direction:column; } .sidebar{ width:100%; } .table-svg{ height:420px; } }
+    @media (max-width: 620px){ .row{ flex-direction:column; } .controls{ flex-wrap:wrap; } }
   </style>
 </head>
 <body>
+  <div class="bg-lines"></div>
   <div class="container">
     <div class="logo-wrap">
-      <div class="logo">Jaafar Al‑Sayed Poker</div>
-      <div class="sub">The Ultimate Poker Experience – Modernized</div>
+      <div class="logo">Poker Pro — jafer AL-S</div>
+      <div class="logo-sub">تجربة بوكر احترافية ز</div>
     </div>
 
-    <!-- ========= AUTH PAGE ========= -->
+    <!-- صفحة التسجيل/الدخول -->
     <section id="auth" class="auth card">
-      <h2>التسجيل والتحقق</h2>
-      <form id="authForm" class="grid" autocomplete="off">
-        <div>
+      <h2>إنشاء حساب / تسجيل الدخول</h2>
+      <form id="authForm">
+        <div class="form-group">
           <label for="fullName">الاسم الكامل</label>
-          <input id="fullName" type="text" required placeholder="الاسم كما في الهوية" />
+          <input id="fullName" type="text" required placeholder="مثال: جعفر أحمد السيد" />
         </div>
-        <div class="grid two">
-          <div>
+        <div class="row">
+          <div class="form-group">
+            <label for="email">البريد الإلكتروني</label>
+            <input id="email" type="email" required placeholder="name@example.com" />
+          </div>
+          <div class="form-group">
             <label for="phone">رقم الهاتف</label>
-            <input id="phone" type="tel" required placeholder="مثال: 512345678" />
-          </div>
-          <div>
-            <label for="countryCode">مفتاح الدولة</label>
-            <select id="countryCode" required>
-              <option value="+966">+966 (SA)</option>
-              <option value="+971">+971 (UAE)</option>
-              <option value="+965">+965 (KW)</option>
-              <option value="+974">+974 (QA)</option>
-              <option value="+973">+973 (BH)</option>
-              <option value="+968">+968 (OM)</option>
-              <option value="+20">+20 (EG)</option>
-              <option value="+1">+1 (US)</option>
-              <option value="+44">+44 (UK)</option>
-            </select>
+            <input id="phone" type="tel" required placeholder="5xxxxxxxx" pattern="[0-9+\-\s]{6,}" />
           </div>
         </div>
-        <div>
-          <label for="email">البريد الإلكتروني</label>
-          <input id="email" type="email" required placeholder="name@example.com" />
-        </div>
-
-        <div>
+        <div class="divider"></div>
+        <div class="form-group">
           <label>نوع الهوية</label>
           <div class="radio-row">
-            <label class="radio"><input type="radio" name="idType" value="passport" required> جواز سفر</label>
-            <label class="radio"><input type="radio" name="idType" value="national"> بطاقة شخصية</label>
+            <label><input type="radio" name="idType" value="passport" required /> جواز سفر</label>
+            <label><input type="radio" name="idType" value="national" /> بطاقة شخصية</label>
           </div>
         </div>
-        <div class="file">
-          <label for="idFile">إرفاق صورة الهوية (JPG/PNG/PDF)</label>
-          <input id="idFile" type="file" accept="image/*,application/pdf" required />
+        <div class="form-group">
+          <label for="idFile">إرفاق الهوية (صورة أو PDF)</label>
+          <input id="idFile" type="file" accept="image/*,.pdf" required />
         </div>
-
-        <div class="row">
-          <div class="cam card" style="flex:1;min-width:280px">
-            <video id="video" autoplay playsinline muted></video>
-            <div style="position:absolute;inset:auto 12px 12px 12px;display:flex;justify-content:space-between;align-items:center;gap:10px">
-              <span class="chip"><i class="fa-solid fa-camera"></i> الكاميرا قيد التشغيل</span>
-              <button id="captureBtn" type="button" class="btn btn-outline"><i class="fa-solid fa-circle-dot"></i> التقاط سيلفي</button>
-            </div>
+        <div class="divider"></div>
+        <div class="form-group" style="display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap;">
+          <div>
+            <div style="font-weight:800; color:#cfefff;">التحقق الحيوي (سيلفي + حيوية)</div>
+            <small style="opacity:.85">سيتم فتح الكاميرا لإلتقاط صورة سيلفي وتنفيذ حركات بسيطة للتأكد من أنك شخص حقيقي.</small>
           </div>
-          <div style="flex:1;min-width:260px">
-            <label>التحقق الحيوي (حركة الوجه)</label>
-            <div class="steps" id="steps">
-              <span class="step" data-step="up">ارفع رأسك للأعلى</span>
-              <span class="step" data-step="down">أنزل رأسك للأسفل</span>
-              <span class="step" data-step="right">انظر لليمين</span>
-              <span class="step" data-step="left">انظر لليسار</span>
-              <span class="step" data-step="blink">ارمش بعينيك</span>
-            </div>
-            <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
-              <button id="startLiveness" type="button" class="btn btn-primary"><i class="fa-solid fa-shield-halved"></i> بدء التحقق الحيوي</button>
-              <button id="finishAuth" type="submit" class="btn btn-outline" disabled>حفظ ومتابعة</button>
-              <small class="muted">* سيتم حفظ البيانات محلياً لتجربة العرض. للنسخة الحقيقية يجب ربط خادم.</small>
-            </div>
-          </div>
+          <button type="button" id="startKYC" class="btn"><i class="fa-solid fa-camera"></i> بدء التحقق</button>
         </div>
+        <div id="kycStatus" class="badge" style="display:none; margin-top:8px;"><i class="fa-solid fa-check"></i> تم التحقق بنجاح</div>
+        <div class="divider"></div>
+        <button class="btn" type="submit" id="createAccount" disabled><i class="fa-solid fa-right-to-bracket"></i> إنشاء الحساب</button>
       </form>
     </section>
 
-    <!-- ========= MAIN ========= -->
+    <!-- الرئيسية -->
     <section id="main" class="main">
-      <div class="main-wrap">
+      <div class="layout">
         <aside class="sidebar card">
           <div class="profile">
-            <div class="avatar" id="avatar"><i class="fa-solid fa-user"></i></div>
-            <div id="displayName" style="font-weight:800">—</div>
-            <div class="muted" style="margin-top:4px">الرصيد</div>
-            <div class="num" id="balance" style="font-weight:800">0</div>
+            <div class="avatar" id="avatarWrap"><i class="fa-solid fa-user"></i></div>
+            <div id="displayName" style="font-weight:800;">—</div>
+            <div class="balance">الرصيد: <span id="balance">0</span> كوين</div>
           </div>
-          <div class="menu">
-            <button class="btn btn-outline" data-page="home"><i class="fa-solid fa-house"></i><span>الصفحة الرئيسية</span></button>
-            <button class="btn btn-outline" data-page="wallet"><i class="fa-solid fa-wallet"></i><span>المحفظة</span></button>
-            <button class="btn btn-outline" data-page="levels"><i class="fa-solid fa-door-open"></i><span>اختيار المستوى</span></button>
-            <button class="btn btn-outline" data-page="records"><i class="fa-solid fa-clock-rotate-left"></i><span>السجلات</span></button>
-            <button class="btn btn-outline" id="logout"><i class="fa-solid fa-right-from-bracket"></i><span>تسجيل الخروج</span></button>
-          </div>
+          <div class="menu-item" data-page="home"><i class="fa-solid fa-house"></i><span>الصفحة الرئيسية</span></div>
+          <div class="menu-item" data-page="wallet"><i class="fa-solid fa-wallet"></i><span>المحفظة</span></div>
+          <div class="menu-item" data-page="levels"><i class="fa-solid fa-layer-group"></i><span>اختيار المستوى</span></div>
+          <div class="menu-item" id="logout"><i class="fa-solid fa-right-from-bracket"></i><span>تسجيل الخروج</span></div>
         </aside>
 
         <main class="table-wrap">
-          <!-- HOME -->
-          <section id="page-home" class="page" style="display:block">
-            <div class="table felt-beginner card" id="homeTable">
-              <div class="gold-rim" style="display:none"></div>
-              <div class="players">طاولة ترحيبية – اختر مستوى لبدء اللعب</div>
-              <div class="controls">
-                <button class="btn btn-primary" data-go="levels">اختر مستوى</button>
-              </div>
+          <div id="table" class="table-svg tbl-beginner">
+            <div class="center-badge"><div class="ring"><div>POKER PRO</div></div></div>
+            <div class="controls">
+              <button class="btn secondary"><i class="fa-solid fa-play"></i> بدء الجولة</button>
+              <button class="btn secondary"><i class="fa-solid fa-coins"></i> رهان</button>
+              <button class="btn secondary"><i class="fa-solid fa-rotate-right"></i> إعادة</button>
+              <button class="btn ghost"><i class="fa-solid fa-hand"></i> سحب</button>
+              <button class="btn ghost"><i class="fa-solid fa-eye"></i> كشف</button>
             </div>
-          </section>
+          </div>
 
-          <!-- WALLET -->
-          <section id="page-wallet" class="page">
-            <div class="wallet card">
-              <div class="balance"><div>رصيدك الحالي (كوينز)</div><div class="num" id="walletBalance">0</div></div>
-              <h3 style="margin:16px 0 6px">عروض الكوينز المتوهّجة</h3>
-              <div class="offers" id="offers"></div>
+          <!-- صفحات فرعية داخل الرئيسية -->
+          <div id="wallet" class="wallet page card">
+            <div class="balance-card">
+              <div>رصيدك الحالي</div>
+              <div class="amount"><span id="balance2">0</span> كوين</div>
+              <div style="margin-top:10px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+                <button class="btn" id="buyBtn"><i class="fa-solid fa-cart-shopping"></i> شراء كوينز</button>
+                <button class="btn ghost" id="sellBtn"><i class="fa-solid fa-money-bill-transfer"></i> بيع كوينز</button>
+              </div>
             </div>
-          </section>
+            <h3 style="margin:8px 0 4px; color:#cfefff;">عروض الشراء</h3>
+            <div class="offers" id="offers"></div>
+          </div>
 
-          <!-- LEVELS -->
-          <section id="page-levels" class="page">
-            <div class="row">
-              <div class="card" style="flex:1;padding:16px">
-                <h3>المستوى المبتدئ</h3>
-                <p class="muted">رهان 10–100 | 4/6 لاعبين</p>
-                <button class="btn btn-primary" data-level="beginner">دخول الغرفة</button>
+          <div id="levels" class="page card">
+            <h3 style="margin:6px 0 10px; color:#cfefff;">اختر مستوى اللعب</h3>
+            <div class="levels">
+              <div class="level card" data-level="beginner">
+                <div><i class="fa-solid fa-seedling"></i></div>
+                <h3>مبتدئ</h3>
+                <div class="info"><span>الرهان 10–100</span><span>4/6 لاعبين</span></div>
               </div>
-              <div class="card" style="flex:1;padding:16px">
-                <h3>المستوى المتوسط</h3>
-                <p class="muted">رهان 100–500 | 4/6 لاعبين</p>
-                <button class="btn btn-primary" data-level="intermediate">دخول الغرفة</button>
+              <div class="level card" data-level="intermediate">
+                <div><i class="fa-solid fa-medal"></i></div>
+                <h3>متوسط</h3>
+                <div class="info"><span>الرهان 100–500</span><span>4/6 لاعبين</span></div>
               </div>
-              <div class="card" style="flex:1;padding:16px">
-                <h3>المستوى المحترف</h3>
-                <p class="muted">رهان 500–2000 | 4/6 لاعبين</p>
-                <button class="btn btn-primary" data-level="advanced">دخول الغرفة</button>
+              <div class="level card" data-level="advanced">
+                <div><i class="fa-solid fa-fire"></i></div>
+                <h3>محترف</h3>
+                <div class="info"><span>الرهان 500–2000</span><span>4/6 لاعبين</span></div>
               </div>
-              <div class="card" style="flex:1;padding:16px">
-                <h3>مستوى الملوك</h3>
-                <p class="muted">رهان 2000+ | 4/6 لاعبين</p>
-                <button class="btn btn-primary" data-level="king">دخول الغرفة</button>
-              </div>
-            </div>
-          </section>
-
-          <!-- GAME ROOM -->
-          <section id="page-room" class="page">
-            <div class="table card" id="roomTable">
-              <div class="gold-rim" id="kingRim" style="display:none"></div>
-              <div class="players" id="players">—</div>
-              <div class="controls">
-                <button class="btn btn-outline" id="deal">بدء الجولة</button>
-                <button class="btn btn-outline" id="bet">رهان</button>
-                <button class="btn btn-outline" id="reset">إعادة</button>
-                <button class="btn btn-primary" id="show">كشف</button>
+              <div class="level card" data-level="king">
+                <div><i class="fa-solid fa-crown"></i></div>
+                <h3>الملوك</h3>
+                <div class="info"><span>2000+ غير محدود</span><span>4/6 لاعبين</span></div>
               </div>
             </div>
-            <div class="card" style="margin-top:12px;padding:12px">
-              <h3 style="margin:6px 0">الدردشة</h3>
-              <div class="row"><input id="chatInput" style="flex:1;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:rgba(0,0,0,.2);color:#fff" placeholder="اكتب رسالتك..."/><button class="btn btn-primary" id="sendChat">إرسال</button></div>
-              <div id="chatLog" style="margin-top:10px;display:grid;gap:6px"></div>
-            </div>
-          </section>
-
-          <!-- RECORDS -->
-          <section id="page-records" class="page">
-            <div class="card" style="padding:16px">
-              <h3>السجلات</h3>
-              <div id="recordsList" class="muted">— قريباً (يتم الحفظ محلياً)</div>
-            </div>
-          </section>
+          </div>
         </main>
       </div>
     </section>
   </div>
 
-  <script>
-    // ====== Helpers
-    const $ = (sel, ctx=document) => ctx.querySelector(sel);
-    const $$ = (sel, ctx=document) => Array.from(ctx.querySelectorAll(sel));
+  <!-- مودال التحقق الحيوي -->
+  <div id="kycModal" class="modal">
+    <div class="box card">
+      <div class="modal-header">
+        <div class="badge"><i class="fa-solid fa-shield"></i> تحقق حيوي</div>
+        <button class="btn ghost" id="closeKYC"><i class="fa-solid fa-xmark"></i> إغلاق</button>
+      </div>
+      <div class="steps">
+        <div class="step" id="st1">1) سيلفي</div>
+        <div class="step" id="st2">2) رأس لأعلى</div>
+        <div class="step" id="st3">3) لأسفل</div>
+        <div class="step" id="st4">4) يمين</div>
+        <div class="step" id="st5">5) يسار</div>
+        <div class="step" id="st6">6) ارمش</div>
+      </div>
+      <div class="video-wrap">
+        <video id="cam" playsinline muted></video>
+        <canvas id="cap" class="capture" width="320" height="240"></canvas>
+      </div>
+      <div class="prompt" id="prompt">اضغط "ابدأ" وقم بمحاذاة وجهك داخل الإطار.</div>
+      <div class="actions">
+        <button id="startSeq" class="btn"><i class="fa-solid fa-circle-play"></i> ابدأ</button>
+        <button id="snap" class="btn secondary" disabled><i class="fa-solid fa-camera"></i> التقاط سيلفي</button>
+        <button id="confirmStep" class="btn ghost" disabled><i class="fa-solid fa-check-double"></i> تأكيد الحركة</button>
+      </div>
+    </div>
+  </div>
 
-    const pages = {
-      home: $('#page-home'), wallet: $('#page-wallet'), levels: $('#page-levels'), room: $('#page-room'), records: $('#page-records')
+  <div id="toast" class="toast">تم النسخ إلى الحافظة</div>
+
+  <script>
+    // ====== أدوات بسيطة ======
+    const $ = (sel) => document.querySelector(sel);
+    const $$ = (sel) => document.querySelectorAll(sel);
+    const toast = (msg) => { const t = $('#toast'); t.textContent = msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 2600); };
+
+    // ====== حالة التطبيق ======
+    const state = {
+      user: null,
+      kyc: { selfie: null, steps: { up:false, down:false, right:false, left:false, blink:false }, done:false },
+      balance: 5000,
+      level: 'beginner'
     };
 
-    function showMain(){ $('#auth').style.display='none'; $('.main').style.display='block'; }
-    function showPage(id){ Object.values(pages).forEach(p=>p.style.display='none'); pages[id].style.display='block'; }
+    // ====== تهيئة العروض (كوينز) ======
+    const offers = [
+      { amt: 100, price: 10 },{ amt: 200, price: 19 },{ amt: 300, price: 28 },{ amt: 400, price: 36 },{ amt: 500, price: 45 },
+      { amt: 600, price: 54 },{ amt: 700, price: 63 },{ amt: 800, price: 72 },{ amt: 900, price: 81 },{ amt: 1000, price: 90 }
+    ];
 
-    // ====== Webcam + Liveness (lightweight – no heavy ML)
-    const video = document.getElementById('video');
-    let mediaStream=null, selfieData=null, livenessPassed=false;
-
-    async function startCam(){
-      try{
-        mediaStream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'}, audio:false});
-        video.srcObject = mediaStream;
-      }catch(err){ alert('لم نتمكن من فتح الكاميرا: '+err.message); }
+    function coinSVG(){
+      return `<?xml version="1.0"?><svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="g1" cx="50%" cy="40%" r="60%">
+            <stop offset="0%" stop-color="#dffbff"/>
+            <stop offset="60%" stop-color="#8be9ff"/>
+            <stop offset="100%" stop-color="#46e6ff"/>
+          </radialGradient>
+          <linearGradient id="edge" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#aaf3ff"/>
+            <stop offset="100%" stop-color="#7cddff"/>
+          </linearGradient>
+        </defs>
+        <circle cx="60" cy="60" r="52" fill="url(#g1)" />
+        <circle cx="60" cy="60" r="52" fill="none" stroke="url(#edge)" stroke-width="6" />
+        <circle cx="60" cy="60" r="38" fill="none" stroke="rgba(255,255,255,.65)" stroke-width="2" />
+        <g fill="#00324a" opacity=".9" font-family="monospace" font-size="42" font-weight="700">
+          <text x="50%" y="50%" text-anchor="middle" dominant-baseline="central">₵</text>
+        </g>
+        <g opacity=".35">
+          <ellipse cx="40" cy="36" rx="10" ry="6" fill="#fff"/>
+        </g>
+      </svg>`;
     }
 
-    function captureSelfie(){
-      const c=document.createElement('canvas');
-      const w=video.videoWidth||640, h=video.videoHeight||480; c.width=w; c.height=h;
-      const ctx=c.getContext('2d'); ctx.drawImage(video,0,0,w,h);
-      selfieData = c.toDataURL('image/jpeg',0.85);
-      $('#avatar').style.backgroundImage = `url(${selfieData})`; $('#avatar').style.backgroundSize='cover'; $('#avatar').innerHTML='';
+    function renderOffers(){
+      const box = $('#offers');
+      box.innerHTML = '';
+      offers.forEach(o=>{
+        const el = document.createElement('div');
+        el.className = 'offer card';
+        el.innerHTML = `
+          <div class="coin"><img alt="coin" src="data:image/svg+xml;utf8,${encodeURIComponent(coinSVG())}"/></div>
+          <div class="offer-amt">${o.amt} كوين</div>
+          <div class="offer-price">$${o.price.toFixed(2)}</div>`;
+        el.addEventListener('click', ()=>{ state.balance += o.amt; save(); syncUI(); toast(`تم شراء ${o.amt} كوين`); });
+        box.appendChild(el);
+      });
     }
 
-    // Simple liveness: guide the user through motion steps and use FaceDetector when available
-    const stepsEl = $('#steps');
-    const stepOrder = ['up','down','right','left','blink'];
-    let currentStepIndex = 0; let detector=null; let lastBox=null; let blinkCounter=0;
+    // ====== تبديل الصفحات ======
+    function showMain(){ $('#auth').style.display='none'; $('#main').style.display='block'; }
+    function showPage(id){ $$('.page').forEach(p=>p.style.display='none'); if($('#'+id)) $('#'+id).style.display='block'; }
 
-    async function setupDetector(){
-      if('FaceDetector' in window){ detector = new window.FaceDetector({fastMode:true,maxDetectedFaces:1}); }
+    // ====== حفظ/تحميل ======
+    function save(){ localStorage.setItem('pokerUser', JSON.stringify(state.user)); localStorage.setItem('pokerBalance', state.balance); localStorage.setItem('pokerKYC', JSON.stringify(state.kyc)); localStorage.setItem('pokerLevel', state.level); }
+    function load(){
+      const u = localStorage.getItem('pokerUser'); if(u) state.user = JSON.parse(u);
+      const b = localStorage.getItem('pokerBalance'); if(b) state.balance = +b;
+      const k = localStorage.getItem('pokerKYC'); if(k) state.kyc = JSON.parse(k);
+      const lv = localStorage.getItem('pokerLevel'); if(lv) state.level = lv;
     }
 
-    async function runLiveness(){
-      currentStepIndex=0; blinkCounter=0; markSteps();
-      if(!mediaStream) await startCam();
-      await setupDetector();
-      const start = performance.now();
-
-      const loop = async () => {
-        if(currentStepIndex>=stepOrder.length){ livenessPassed=true; $('#finishAuth').disabled=false; return; }
-        const target = stepOrder[currentStepIndex];
-        if(detector){
-          try{
-            const det = await detector.detect(video);
-            if(det && det.length){
-              const box = det[0].boundingBox; // x,y,width,height
-              if(!lastBox) lastBox=box;
-              const dx=box.x - lastBox.x, dy=box.y - lastBox.y, dh=(box.height-lastBox.height);
-              const movedUp = dy < -3; const movedDown = dy > 3; const movedLeft = dx > 6; const movedRight = dx < -6;
-              // Fake blink via height/area change
-              const blinkish = Math.abs(dh) > 8;
-              if((target==='up'&&movedUp)||(target==='down'&&movedDown)||(target==='left'&&movedLeft)||(target==='right'&&movedRight)) advanceStep();
-              if(target==='blink' && blinkish){ blinkCounter++; if(blinkCounter>1) advanceStep(); }
-              lastBox=box;
-            }
-          }catch(e){ /* ignore */ }
-        }
-        // Fallback timeout: user can manually click step to confirm if detector not supported
-        if(performance.now()-start>60000){ breakLiveness('انتهى الوقت، يمكنك المحاولة مجدداً'); return; }
-        requestAnimationFrame(loop);
-      };
-      loop();
+    function syncUI(){
+      if(state.user){ $('#displayName').textContent = state.user.fullName; }
+      $('#balance').textContent = Number(state.balance).toLocaleString();
+      $('#balance2').textContent = Number(state.balance).toLocaleString();
+      if(state.kyc?.selfie){ const img = document.createElement('img'); img.src = state.kyc.selfie; img.alt = 'avatar'; $('#avatarWrap').innerHTML=''; $('#avatarWrap').appendChild(img); }
+      // تبديل ثيم الطاولة حسب المستوى
+      const t = $('#table'); t.className = 'table-svg ' + {
+        beginner: 'tbl-beginner', intermediate: 'tbl-intermediate', advanced: 'tbl-advanced', king: 'tbl-king'
+      }[state.level];
     }
 
-    function advanceStep(){ currentStepIndex++; markSteps(); if(currentStepIndex>=stepOrder.length){ toast('تم التحقق الحيوي بنجاح'); livenessPassed=true; $('#finishAuth').disabled=false; } }
-    function markSteps(){ $$('.step', stepsEl).forEach(s=>s.classList.toggle('done', stepOrder.indexOf(s.dataset.step) < currentStepIndex)); }
-    function breakLiveness(msg){ alert(msg); currentStepIndex=0; markSteps(); }
-
-    stepsEl.addEventListener('click', (e)=>{ if(e.target.classList.contains('step')){ // manual confirm fallback
-      const idx = stepOrder.indexOf(e.target.dataset.step);
-      if(idx===currentStepIndex){ advanceStep(); }
-    }});
-
-    $('#startLiveness').addEventListener('click', runLiveness);
-    $('#captureBtn').addEventListener('click', captureSelfie);
-
-    // ====== Auth submit (store locally)
+    // ====== مصادقة بسيطة (محلية) ======
     $('#authForm').addEventListener('submit', (e)=>{
       e.preventDefault();
-      if(!selfieData){ return alert('الرجاء التقاط صورة سيلفي'); }
-      if(!livenessPassed){ return alert('الرجاء إكمال التحقق الحيوي'); }
-      const fullName=$('#fullName').value.trim();
-      const phone=$('#countryCode').value + $('#phone').value.trim();
-      const email=$('#email').value.trim();
-      const idType=document.querySelector('input[name="idType"]:checked')?.value||'';
-      const idFile=$('#idFile').files[0]?.name||'';
-      const user={fullName,phone,email,idType,idFile,selfie:selfieData};
-      localStorage.setItem('user', JSON.stringify(user));
-      if(!localStorage.getItem('coins')) localStorage.setItem('coins','5000');
-      hydrateProfile();
-      showMain(); showPage('home');
+      if(!state.kyc.done){ toast('أكمل التحقق الحيوي أولاً'); return; }
+      const fullName = $('#fullName').value.trim();
+      const email = $('#email').value.trim();
+      const phone = $('#phone').value.trim();
+      const idType = (new FormData(e.target)).get('idType');
+      const idFile = $('#idFile').files[0]?.name || '—';
+      state.user = { fullName, email, phone, idType, idFile, createdAt: Date.now() };
+      save(); showMain(); syncUI(); renderOffers(); showPage('home');
     });
 
-    function hydrateProfile(){
-      const u = JSON.parse(localStorage.getItem('user')||'{}');
-      if(u.fullName) $('#displayName').textContent = u.fullName;
-      const coins = Number(localStorage.getItem('coins')||0);
-      $('#balance').textContent = coins.toLocaleString();
-      $('#walletBalance').textContent = coins.toLocaleString();
-      if(u.selfie){ $('#avatar').style.backgroundImage=`url(${u.selfie})`; $('#avatar').style.backgroundSize='cover'; $('#avatar').innerHTML=''; }
+    $('#logout').addEventListener('click', ()=>{ localStorage.clear(); location.reload(); });
+
+    // ====== تنقل القائمة ======
+    $$('.menu-item[data-page]').forEach(m=> m.addEventListener('click', ()=>{
+      const p = m.getAttribute('data-page');
+      if(p==='wallet') showPage('wallet'); else if(p==='levels') showPage('levels'); else showPage('home');
+    }));
+
+    // ====== اختيار المستوى وتغيير تصميم الطاولة ======
+    $$('.level').forEach(l=> l.addEventListener('click', ()=>{
+      state.level = l.dataset.level; save(); syncUI(); showPage('home'); toast('تم اختيار المستوى: '+l.querySelector('h3').textContent);
+    }));
+
+    // ====== كايك: التحقق الحيوي المبسّط ======
+    let stream, videoTrack; let lastCenter = null; let blinkSamples = []; let motionOK = false; let usingFaceDetector = false; let faceDetector = null;
+
+    async function startCam(){
+      stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: {ideal: 1280}, height: {ideal: 720} }, audio:false });
+      $('#cam').srcObject = stream; await $('#cam').play(); videoTrack = stream.getVideoTracks()[0];
+    }
+    function stopCam(){ if(videoTrack) videoTrack.stop(); $('#cam').srcObject = null; }
+
+    // محاولة استخدام واجهة FaceDetector (إن توفرت)
+    try { if('FaceDetector' in window){ faceDetector = new FaceDetector({ fastMode: true, maxDetectedFaces: 1 }); usingFaceDetector = true; } } catch(e){ /* متصفح لا يدعم */ }
+
+    function drawThumb(){ const v = $('#cam'); const c = $('#cap'); const ctx = c.getContext('2d'); const w=c.width, h=c.height; ctx.drawImage(v, 0, 0, w, h); return c.toDataURL('image/jpeg', .9); }
+
+    function centerFromBox(box){ return { x: box.x + box.width/2, y: box.y + box.height/2 } }
+
+    async function detectCenter(){
+      const v = $('#cam');
+      if(usingFaceDetector && faceDetector){
+        try { const faces = await faceDetector.detect(v); if(faces && faces[0]){ const b = faces[0].boundingBox; return centerFromBox(b); } } catch(e){ /* تجاهل */ }
+      }
+      // بديل بسيط: نحسب مركز الحركة العام من فرق إطارات
+      const cw = 160, ch = 120; const tmp = document.createElement('canvas'); tmp.width=cw; tmp.height=ch; const ctx = tmp.getContext('2d');
+      detectCenter.prev = detectCenter.prev || ctx.createImageData(cw, ch);
+      ctx.drawImage(v, 0, 0, cw, ch); const curr = ctx.getImageData(0,0,cw,ch);
+      let sum=0, sx=0, sy=0; for(let i=0;i<curr.data.length;i+=4){ const d = Math.abs(curr.data[i]-detectCenter.prev.data[i]) + Math.abs(curr.data[i+1]-detectCenter.prev.data[i+1]) + Math.abs(curr.data[i+2]-detectCenter.prev.data[i+2]); if(d>90){ const px=(i/4)%cw, py=((i/4)/cw|0); sum++; sx+=px; sy+=py; } }
+      detectCenter.prev = curr; if(sum>60){ return { x: sx/sum, y: sy/sum }; } return null;
     }
 
-    // ====== Navigation
-    $$('#logout').forEach?null:0; // placeholder to avoid tools warning
-    $('#logout').addEventListener('click',()=>{ localStorage.clear(); location.reload(); });
-    $$('.menu .btn').forEach(b=>b.addEventListener('click',()=>{
-      const page=b.dataset.page; if(page){ showPage(page); if(page==='wallet') hydrateProfile(); }
-    }));
-    $('[data-go="levels"]').addEventListener('click',()=>showPage('levels'));
+    function markStep(n, ok){ $('#st'+n).style.borderColor = ok? 'rgba(0,245,160,.8)':'rgba(70,230,255,.35)'; $('#st'+n).style.color = ok? 'var(--ok)':'#bfeaff'; }
 
-    // ====== Offers – coins (animated 3D)
-    const offersData = [
-      {qty:200, price:3.99},{qty:500, price:8.99},{qty:1200, price:18.99},{qty:2600, price:38.99},
-      {qty:5500, price:78.99},{qty:12000, price:149.99}
+    // منطق التسلسل
+    const seq = [
+      { key:'selfie', prompt:'التقط سيلفي واضحاً بوجهك كاملاً داخل الإطار', act:'snap' },
+      { key:'up', prompt:'حرّك رأسك للأعلى ببطء', act:'motion', dir:'up' },
+      { key:'down', prompt:'حرّك رأسك للأسفل', act:'motion', dir:'down' },
+      { key:'right', prompt:'حرّك رأسك لليمين', act:'motion', dir:'right' },
+      { key:'left', prompt:'حرّك رأسك لليسار', act:'motion', dir:'left' },
+      { key:'blink', prompt:'ارمش بعينيك عدة مرات', act:'blink' }
     ];
-    const offersEl = $('#offers');
-    offersData.forEach(o=>{
-      const card=document.createElement('div'); card.className='coin-card';
-      card.innerHTML = `
-        <div class="coin3d">
-          <div class="face front"></div>
-          <div class="edge"></div>
-          <div class="face back"></div>
-        </div>
-        <div class="coin-title">${o.qty.toLocaleString()} كوينز</div>
-        <div class="coin-price">$${o.price.toFixed(2)}</div>
-        <button class="btn btn-primary buy">شراء</button>
-      `;
-      card.querySelector('.buy').addEventListener('click',()=>{
-        const cur=Number(localStorage.getItem('coins')||0)+o.qty; localStorage.setItem('coins',cur); hydrateProfile(); toast('تمت إضافة الكوينز');
-      });
-      offersEl.appendChild(card);
-    });
+    let stepIndex = 0; let blinkCounter = 0;
 
-    // ====== Levels -> Room (different table skins)
-    const levelToSkin = {
-      beginner:'felt-beginner', intermediate:'felt-intermediate', advanced:'felt-advanced', king:'felt-king'
-    };
-    $$('#page-levels [data-level]').forEach(btn=>btn.addEventListener('click',()=>{
-      const lvl=btn.dataset.level, table=$('#roomTable');
-      table.className = `table card ${levelToSkin[lvl]}`;
-      $('#kingRim').style.display = (lvl==='king')? 'block':'none';
-      showPage('room'); initRoom(lvl);
-    }));
-
-    // ====== Simple Poker Logic (front‑end demo – not multiplayer)
-    const ranks=['2','3','4','5','6','7','8','9','T','J','Q','K','A'];
-    const suits=['♠','♥','♦','♣'];
-    function newDeck(){ const d=[]; for(const r of ranks){ for(const s of suits){ d.push(r+s); } } return d; }
-    function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
-
-    let deck=[], players=[{name:'Player 1'},{name:'Player 2'},{name:'Player 3'},{name:'You'}], community=[];
-
-    function initRoom(level){ deck=shuffle(newDeck()); community=[]; renderPlayers(true); $('#deal').disabled=false; $('#show').disabled=false; }
-
-    function renderPlayers(blank=false){
-      const wrap=$('#players'); wrap.innerHTML='';
-      const grid=document.createElement('div'); grid.style.cssText='display:grid;grid-template-columns:repeat(4,1fr);gap:10px;width:100%;padding:12px';
-      players.forEach((p,i)=>{
-        const el=document.createElement('div'); el.className='card'; el.style.padding='10px';
-        el.innerHTML = `
-          <div style="display:flex;justify-content:space-between;align-items:center"><strong>${p.name}</strong><span class="muted">$${(1000+i*300).toLocaleString()}</span></div>
-          <div style="display:flex;gap:6px;margin-top:8px">
-            ${blank? '<div class="hole" style="width:42px;height:60px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18)"></div><div class="hole" style="width:42px;height:60px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18)"></div>' : cardEl(p.hole[0])+cardEl(p.hole[1])}
-          </div>
-        `;
-        grid.appendChild(el);
-      });
-      wrap.appendChild(grid);
-      const board=document.createElement('div'); board.className='card'; board.style.cssText='margin-top:10px;padding:10px;display:flex;gap:8px;justify-content:center;align-items:center;min-height:84px';
-      board.id='board'; board.innerHTML = community.length? community.map(cardEl).join('') : '<span class="muted">الطاولة (Community Cards)</span>';
-      wrap.appendChild(board);
+    async function runMotion(dir){
+      // نرصد إزاحة مركز الوجه/الحركة مقارنة بالإطار السابق
+      const center = await detectCenter(); if(!center){ return false; }
+      if(!lastCenter){ lastCenter = center; return false; }
+      const dx = center.x - lastCenter.x; const dy = center.y - lastCenter.y; lastCenter = center;
+      const TH = 6; // عتبة بسيطة
+      if(dir==='up'   && dy < -TH) return true;
+      if(dir==='down' && dy >  TH) return true;
+      if(dir==='right'&& dx >  TH) return true;
+      if(dir==='left' && dx < -TH) return true;
+      return false;
     }
 
-    function cardEl(c){
-      const red = c.includes('♥')||c.includes('♦');
-      return `<div style="width:42px;height:60px;border-radius:8px;background:#fff;color:${red?'#c1121f':'#111'};display:grid;place-items:center;font-weight:800;border:1px solid #d9d9d9">${c}</div>`;
+    async function runBlink(){
+      // كشف رمش تقريبي: قياس طاقة التغير السريعة عدة مرات
+      const c = await detectCenter(); // يستدعي فرق الإطارات ضمنياً
+      blinkSamples.push(Date.now());
+      // إذا أخذنا تغيّرات سريعة (>=4 خلال ~2 ثانية) نعدها رمش
+      const now = Date.now(); blinkSamples = blinkSamples.filter(t => now - t < 1800);
+      return blinkSamples.length >= 4; // تبسيط
     }
 
-    function deal(){ players.forEach(p=>{ p.hole=[deck.pop(),deck.pop()]; }); renderPlayers(); }
-    function flop(){ community=[deck.pop(),deck.pop(),deck.pop()]; $('#board').innerHTML=community.map(cardEl).join(''); }
-    function turn(){ community.push(deck.pop()); $('#board').innerHTML=community.map(cardEl).join(''); }
-    function river(){ community.push(deck.pop()); $('#board').innerHTML=community.map(cardEl).join(''); }
+    function updatePrompt(){ $('#prompt').textContent = seq[stepIndex]?.prompt || 'تم'; }
 
-    $('#deal').addEventListener('click',()=>{ deal(); setTimeout(flop,800); setTimeout(turn,1600); setTimeout(river,2400); });
-    $('#reset').addEventListener('click',()=>{ initRoom('beginner'); });
-    $('#show').addEventListener('click',()=>{ // naive evaluate – demo only
-      toast('تم الكشف – التقييم التفصيلي قيد التطوير');
+    async function advance(){
+      if(stepIndex >= seq.length){ // اكتمل
+        state.kyc.done = true; save(); $('#kycStatus').style.display='inline-flex'; $('#createAccount').disabled=false; $('#confirmStep').disabled=true; $('#snap').disabled=true; toast('اكتمل التحقق الحيوي'); return; }
+      updatePrompt();
+      // تمييز الخطوة في الشريط
+      for(let i=1;i<=6;i++){ markStep(i, i-1 < stepIndex); }
+      // تفعيل الأزرار الموافقة
+      const action = seq[stepIndex].act;
+      $('#snap').disabled = action!=='snap';
+      $('#confirmStep').disabled = action==='snap';
+    }
+
+    // أحداث المودال
+    $('#startKYC').addEventListener('click', async ()=>{ $('#kycModal').classList.add('open'); await startCam(); $('#prompt').textContent = 'اضغط "ابدأ" لمحاذاة وجهك'; });
+    $('#closeKYC').addEventListener('click', ()=>{ stopCam(); $('#kycModal').classList.remove('open'); });
+
+    $('#startSeq').addEventListener('click', ()=>{ stepIndex=0; lastCenter=null; blinkSamples=[]; advance(); });
+
+    $('#snap').addEventListener('click', ()=>{ const data = drawThumb(); state.kyc.selfie = data; save(); markStep(1,true); stepIndex=1; $('#snap').disabled=true; $('#confirmStep').disabled=false; updatePrompt(); toast('تم التقاط السيلفي'); });
+
+    $('#confirmStep').addEventListener('click', async ()=>{
+      const step = seq[stepIndex]; let ok=false;
+      if(step.act==='motion'){ ok = await runMotion(step.dir); }
+      else if(step.act==='blink'){ ok = await runBlink(); }
+      if(ok){
+        const map = { up:2, down:3, right:4, left:5, blink:6 }; markStep(map[step.key] || (stepIndex+1), true);
+        state.kyc.steps[step.key] = true; stepIndex++; updatePrompt();
+        if(stepIndex>=seq.length){ advance(); } else { /* بقاء في التسلسل */ }
+      } else { toast('لم يتم الكشف بوضوح، كرر الحركة ببطء مع بقاء الوجه داخل الإطار'); }
     });
 
-    // ====== Chat (local)
-    $('#sendChat').addEventListener('click',()=>{
-      const t=$('#chatInput').value.trim(); if(!t) return; const div=document.createElement('div');
-      div.textContent = t; $('#chatLog').appendChild(div); $('#chatInput').value='';
+    // ====== بدء التشغيل ======
+    window.addEventListener('load', ()=>{
+      load();
+      if(state.user){ showMain(); renderOffers(); syncUI(); showPage('home'); $('#createAccount').disabled=false; if(state.kyc?.done) $('#kycStatus').style.display='inline-flex'; }
     });
 
-    // ====== Toast helper
-    function toast(msg){ const t=document.createElement('div'); t.textContent=msg; t.style.cssText='position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.8);color:#fff;padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.18);z-index:9999'; document.body.appendChild(t); setTimeout(()=>t.remove(),1800); }
-
-    // ====== Init
-    (function init(){
-      // restore
-      const u = localStorage.getItem('user'); if(u){ hydrateProfile(); showMain(); showPage('home'); } else { startCam(); }
-    })();
   </script>
 </body>
 </html>
