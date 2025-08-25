@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jaafar Al‑Sayed Poker – الإصدار المحسّن</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <style>
+    :root{
+      --bg-1:#0b1020;--bg-2:#101e3a;--ink:#eef3ff;--muted:#b8c1d9;
+      --brand-1:#36d1dc; /* cyan */
+      --brand-2:#5b86e5; /* blue/purple */
+      --accent:#8a2be2;  /* electric violet */
+      --ok:#30d158;--warn:#ffd60a;--bad:#ff375f;
+      --ring:#5b86e5;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:radial-gradient(1200px 800px at 20% -10%,rgba(54,209,220,.15),transparent 60%),radial-gradient(900px 700px at 120% 30%,rgba(91,134,229,.18),transparent 60%),linear-gradient(135deg,var(--bg-1),var(--bg-2));color:var(--ink);font-family:"Segoe UI",Tahoma,Arial,sans-serif;min-height:100vh;overflow-x:hidden}
+    .container{width:min(1400px,100%);margin-inline:auto;padding:20px}
+
+    /* ===== Brand Header ===== */
+    .logo-wrap{display:grid;place-items:center;gap:8px;margin:14px 0 8px}
+    .logo{font-weight:800;letter-spacing:.5px;font-size:clamp(28px,4vw,40px);padding:10px 22px;border-radius:16px;background:linear-gradient(90deg,var(--brand-1),var(--brand-2));-webkit-background-clip:text;background-clip:text;color:transparent;position:relative}
+    .logo::after{content:"";position:absolute;inset:-2px;border-radius:18px;padding:1px;background:linear-gradient(90deg,rgba(54,209,220,.5),rgba(91,134,229,.5));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:ring 6s linear infinite}
+    @keyframes ring{0%{filter:hue-rotate(0)}100%{filter:hue-rotate(360deg)}}
+    .sub{color:var(--muted);font-size:14px}
+
+    /* ===== Cards & Panels ===== */
+    .card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(8px);border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+
+    /* ===== Animated Auth (non‑gold palette) ===== */
+    .auth{max-width:640px;margin:18px auto;padding:22px 22px 26px;position:relative;overflow:hidden}
+    .auth::before{content:"";position:absolute;inset:-40%;background:conic-gradient(from 0deg,transparent 0 290deg,rgba(54,209,220,.45) 320deg,transparent),radial-gradient(800px 400px at -10% 20%,rgba(91,134,229,.22),transparent 60%);filter:blur(30px);animation:spin 18s linear infinite}
+    @keyframes spin{to{transform:rotate(1turn)}}
+    .auth h2{position:relative;margin:0 0 14px;font-size:24px;color:#e8f0ff}
+    .grid{display:grid;gap:14px}
+    .grid.two{grid-template-columns:1fr 1fr}
+    label{font-size:14px;color:#dfe6ff}
+    input[type="text"],input[type="email"],input[type="tel"],select{width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.16);background:rgba(0,0,0,.25);color:#fff;outline:none;transition:.2s}
+    input:focus,select:focus{border-color:var(--ring);box-shadow:0 0 0 3px rgba(91,134,229,.25)}
+    .radio-row{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+    .radio{display:flex;gap:8px;align-items:center;padding:8px 10px;border:1px solid rgba(255,255,255,.12);border-radius:10px}
+    .file{position:relative;padding:12px;border:1px dashed rgba(255,255,255,.25);border-radius:12px}
+    .file input[type="file"]{width:100%}
+
+    .btn{cursor:pointer;border:0;border-radius:12px;padding:12px 16px;font-weight:700}
+    .btn-primary{background:linear-gradient(90deg,var(--brand-1),var(--brand-2));color:#01030a;box-shadow:0 10px 25px rgba(91,134,229,.35);transition:.2s}
+    .btn-primary:hover{transform:translateY(-1px)}
+    .btn-outline{background:transparent;border:1px solid rgba(255,255,255,.18);color:#e7ecff}
+
+    .muted{color:var(--muted)}
+
+    .row{display:flex;gap:18px;flex-wrap:wrap}
+
+    /* Webcam & Liveness */
+    .cam{border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.12);position:relative}
+    .cam video{width:100%;height:260px;object-fit:cover;background:#000}
+    .chip{display:inline-flex;align-items:center;gap:8px;font-size:12px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);padding:8px 10px;border-radius:999px}
+    .steps{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    .step{font-size:12px;padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.05)}
+    .step.done{background:rgba(48,209,88,.18);border-color:rgba(48,209,88,.35)}
+
+    /* Main layout */
+    .main{display:none;margin-top:20px}
+    .main-wrap{display:flex;gap:22px}
+    .sidebar{width:280px}
+    .profile{padding:18px;text-align:center}
+    .avatar{width:90px;height:90px;margin:0 auto 10px;border-radius:50%;border:2px solid rgba(255,255,255,.2);display:grid;place-items:center;background:rgba(255,255,255,.05)}
+
+    .menu{display:grid;gap:10px;margin-top:12px}
+    .menu button{justify-content:flex-start;display:flex;gap:10px;align-items:center}
+
+    /* Poker table backgrounds per level */
+    .table-wrap{flex:1}
+    .table{height:520px;border-radius:22px;position:relative;overflow:hidden;border:2px solid rgba(255,255,255,.12)}
+    .table:after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 30%,rgba(255,255,255,.08),transparent 45%),radial-gradient(800px 400px at 80% 120%,rgba(91,134,229,.14),transparent 60%);pointer-events:none}
+
+    /* Beginner – green felt */
+    .felt-beginner{background:conic-gradient(from 180deg at 40% 40%,#0c5d2e,#0a8a45,#0e6a36,#0c5d2e);}
+    /* Intermediate – royal blue */
+    .felt-intermediate{background:radial-gradient(1200px 600px at 50% -20%,#0e3a7a,#0b2358 60%) }
+    /* Advanced – crimson */
+    .felt-advanced{background:radial-gradient(1100px 700px at -10% 10%,#640d14,#3d0b0f 55%)}
+    /* King – black marble with gold rim */
+    .felt-king{background:linear-gradient(135deg,#0b0b12,#16161d);}
+    .gold-rim{position:absolute;inset:16px;border-radius:32px;border:6px double rgba(255,215,0,.65);box-shadow:0 0 40px rgba(255,215,0,.25) inset}
+
+    /* Players placeholders */
+    .players{position:absolute;inset:0;display:grid;place-items:center}
+
+    /* Wallet */
+    .wallet{padding:18px}
+    .balance{display:grid;place-items:center;padding:18px;border-radius:16px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04)}
+    .balance .num{font-size:32px;margin-top:6px;font-weight:800}
+
+    .offers{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px;margin-top:14px}
+    .coin-card{position:relative;isolation:isolate;padding:16px;border-radius:16px;border:1px solid rgba(255,255,255,.15);background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));box-shadow:0 10px 25px rgba(0,0,0,.25)}
+    .coin3d{width:84px;height:84px;margin:auto 0 10px;position:relative;transform-style:preserve-3d;animation:flip 3.6s linear infinite}
+    @keyframes flip{to{transform:rotateY(1turn)}}
+    .coin3d .face{position:absolute;inset:0;border-radius:50%}
+    .coin3d .front{background:radial-gradient(circle at 40% 35%,#fff7cc,#ffd24a 40%,#c29218 70%,#7a5a0d);transform:translateZ(6px);border:2px solid #f3d36b}
+    .coin3d .back{background:radial-gradient(circle at 60% 65%,#fff7cc,#ffd24a 40%,#c29218 70%,#7a5a0d);transform:rotateY(180deg) translateZ(6px);border:2px solid #f3d36b}
+    .coin3d .edge{position:absolute;inset:-2px;border-radius:50%;background:repeating-linear-gradient(90deg,#c79a2b 0 6px,#a97d1a 6px 10px);transform:translateZ(0);}
+    .coin-title{font-weight:800}
+    .coin-price{opacity:.9}
+    .buy{margin-top:10px;width:100%}
+
+    /* Game controls */
+    .controls{position:absolute;inset:auto 0 14px;display:flex;gap:10px;justify-content:center}
+
+    /* Pages */
+    .page{display:none}
+
+    @media (max-width:1024px){.main-wrap{flex-direction:column}.sidebar{width:100%}.table{height:420px}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo-wrap">
+      <div class="logo">Jaafar Al‑Sayed Poker</div>
+      <div class="sub">The Ultimate Poker Experience – Modernized</div>
+    </div>
+
+    <!-- ========= AUTH PAGE ========= -->
+    <section id="auth" class="auth card">
+      <h2>التسجيل والتحقق</h2>
+      <form id="authForm" class="grid" autocomplete="off">
+        <div>
+          <label for="fullName">الاسم الكامل</label>
+          <input id="fullName" type="text" required placeholder="الاسم كما في الهوية" />
+        </div>
+        <div class="grid two">
+          <div>
+            <label for="phone">رقم الهاتف</label>
+            <input id="phone" type="tel" required placeholder="مثال: 512345678" />
+          </div>
+          <div>
+            <label for="countryCode">مفتاح الدولة</label>
+            <select id="countryCode" required>
+              <option value="+966">+966 (SA)</option>
+              <option value="+971">+971 (UAE)</option>
+              <option value="+965">+965 (KW)</option>
+              <option value="+974">+974 (QA)</option>
+              <option value="+973">+973 (BH)</option>
+              <option value="+968">+968 (OM)</option>
+              <option value="+20">+20 (EG)</option>
+              <option value="+1">+1 (US)</option>
+              <option value="+44">+44 (UK)</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label for="email">البريد الإلكتروني</label>
+          <input id="email" type="email" required placeholder="name@example.com" />
+        </div>
+
+        <div>
+          <label>نوع الهوية</label>
+          <div class="radio-row">
+            <label class="radio"><input type="radio" name="idType" value="passport" required> جواز سفر</label>
+            <label class="radio"><input type="radio" name="idType" value="national"> بطاقة شخصية</label>
+          </div>
+        </div>
+        <div class="file">
+          <label for="idFile">إرفاق صورة الهوية (JPG/PNG/PDF)</label>
+          <input id="idFile" type="file" accept="image/*,application/pdf" required />
+        </div>
+
+        <div class="row">
+          <div class="cam card" style="flex:1;min-width:280px">
+            <video id="video" autoplay playsinline muted></video>
+            <div style="position:absolute;inset:auto 12px 12px 12px;display:flex;justify-content:space-between;align-items:center;gap:10px">
+              <span class="chip"><i class="fa-solid fa-camera"></i> الكاميرا قيد التشغيل</span>
+              <button id="captureBtn" type="button" class="btn btn-outline"><i class="fa-solid fa-circle-dot"></i> التقاط سيلفي</button>
+            </div>
+          </div>
+          <div style="flex:1;min-width:260px">
+            <label>التحقق الحيوي (حركة الوجه)</label>
+            <div class="steps" id="steps">
+              <span class="step" data-step="up">ارفع رأسك للأعلى</span>
+              <span class="step" data-step="down">أنزل رأسك للأسفل</span>
+              <span class="step" data-step="right">انظر لليمين</span>
+              <span class="step" data-step="left">انظر لليسار</span>
+              <span class="step" data-step="blink">ارمش بعينيك</span>
+            </div>
+            <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+              <button id="startLiveness" type="button" class="btn btn-primary"><i class="fa-solid fa-shield-halved"></i> بدء التحقق الحيوي</button>
+              <button id="finishAuth" type="submit" class="btn btn-outline" disabled>حفظ ومتابعة</button>
+              <small class="muted">* سيتم حفظ البيانات محلياً لتجربة العرض. للنسخة الحقيقية يجب ربط خادم.</small>
+            </div>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <!-- ========= MAIN ========= -->
+    <section id="main" class="main">
+      <div class="main-wrap">
+        <aside class="sidebar card">
+          <div class="profile">
+            <div class="avatar" id="avatar"><i class="fa-solid fa-user"></i></div>
+            <div id="displayName" style="font-weight:800">—</div>
+            <div class="muted" style="margin-top:4px">الرصيد</div>
+            <div class="num" id="balance" style="font-weight:800">0</div>
+          </div>
+          <div class="menu">
+            <button class="btn btn-outline" data-page="home"><i class="fa-solid fa-house"></i><span>الصفحة الرئيسية</span></button>
+            <button class="btn btn-outline" data-page="wallet"><i class="fa-solid fa-wallet"></i><span>المحفظة</span></button>
+            <button class="btn btn-outline" data-page="levels"><i class="fa-solid fa-door-open"></i><span>اختيار المستوى</span></button>
+            <button class="btn btn-outline" data-page="records"><i class="fa-solid fa-clock-rotate-left"></i><span>السجلات</span></button>
+            <button class="btn btn-outline" id="logout"><i class="fa-solid fa-right-from-bracket"></i><span>تسجيل الخروج</span></button>
+          </div>
+        </aside>
+
+        <main class="table-wrap">
+          <!-- HOME -->
+          <section id="page-home" class="page" style="display:block">
+            <div class="table felt-beginner card" id="homeTable">
+              <div class="gold-rim" style="display:none"></div>
+              <div class="players">طاولة ترحيبية – اختر مستوى لبدء اللعب</div>
+              <div class="controls">
+                <button class="btn btn-primary" data-go="levels">اختر مستوى</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- WALLET -->
+          <section id="page-wallet" class="page">
+            <div class="wallet card">
+              <div class="balance"><div>رصيدك الحالي (كوينز)</div><div class="num" id="walletBalance">0</div></div>
+              <h3 style="margin:16px 0 6px">عروض الكوينز المتوهّجة</h3>
+              <div class="offers" id="offers"></div>
+            </div>
+          </section>
+
+          <!-- LEVELS -->
+          <section id="page-levels" class="page">
+            <div class="row">
+              <div class="card" style="flex:1;padding:16px">
+                <h3>المستوى المبتدئ</h3>
+                <p class="muted">رهان 10–100 | 4/6 لاعبين</p>
+                <button class="btn btn-primary" data-level="beginner">دخول الغرفة</button>
+              </div>
+              <div class="card" style="flex:1;padding:16px">
+                <h3>المستوى المتوسط</h3>
+                <p class="muted">رهان 100–500 | 4/6 لاعبين</p>
+                <button class="btn btn-primary" data-level="intermediate">دخول الغرفة</button>
+              </div>
+              <div class="card" style="flex:1;padding:16px">
+                <h3>المستوى المحترف</h3>
+                <p class="muted">رهان 500–2000 | 4/6 لاعبين</p>
+                <button class="btn btn-primary" data-level="advanced">دخول الغرفة</button>
+              </div>
+              <div class="card" style="flex:1;padding:16px">
+                <h3>مستوى الملوك</h3>
+                <p class="muted">رهان 2000+ | 4/6 لاعبين</p>
+                <button class="btn btn-primary" data-level="king">دخول الغرفة</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- GAME ROOM -->
+          <section id="page-room" class="page">
+            <div class="table card" id="roomTable">
+              <div class="gold-rim" id="kingRim" style="display:none"></div>
+              <div class="players" id="players">—</div>
+              <div class="controls">
+                <button class="btn btn-outline" id="deal">بدء الجولة</button>
+                <button class="btn btn-outline" id="bet">رهان</button>
+                <button class="btn btn-outline" id="reset">إعادة</button>
+                <button class="btn btn-primary" id="show">كشف</button>
+              </div>
+            </div>
+            <div class="card" style="margin-top:12px;padding:12px">
+              <h3 style="margin:6px 0">الدردشة</h3>
+              <div class="row"><input id="chatInput" style="flex:1;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:rgba(0,0,0,.2);color:#fff" placeholder="اكتب رسالتك..."/><button class="btn btn-primary" id="sendChat">إرسال</button></div>
+              <div id="chatLog" style="margin-top:10px;display:grid;gap:6px"></div>
+            </div>
+          </section>
+
+          <!-- RECORDS -->
+          <section id="page-records" class="page">
+            <div class="card" style="padding:16px">
+              <h3>السجلات</h3>
+              <div id="recordsList" class="muted">— قريباً (يتم الحفظ محلياً)</div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // ====== Helpers
+    const $ = (sel, ctx=document) => ctx.querySelector(sel);
+    const $$ = (sel, ctx=document) => Array.from(ctx.querySelectorAll(sel));
+
+    const pages = {
+      home: $('#page-home'), wallet: $('#page-wallet'), levels: $('#page-levels'), room: $('#page-room'), records: $('#page-records')
+    };
+
+    function showMain(){ $('#auth').style.display='none'; $('.main').style.display='block'; }
+    function showPage(id){ Object.values(pages).forEach(p=>p.style.display='none'); pages[id].style.display='block'; }
+
+    // ====== Webcam + Liveness (lightweight – no heavy ML)
+    const video = document.getElementById('video');
+    let mediaStream=null, selfieData=null, livenessPassed=false;
+
+    async function startCam(){
+      try{
+        mediaStream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'}, audio:false});
+        video.srcObject = mediaStream;
+      }catch(err){ alert('لم نتمكن من فتح الكاميرا: '+err.message); }
+    }
+
+    function captureSelfie(){
+      const c=document.createElement('canvas');
+      const w=video.videoWidth||640, h=video.videoHeight||480; c.width=w; c.height=h;
+      const ctx=c.getContext('2d'); ctx.drawImage(video,0,0,w,h);
+      selfieData = c.toDataURL('image/jpeg',0.85);
+      $('#avatar').style.backgroundImage = `url(${selfieData})`; $('#avatar').style.backgroundSize='cover'; $('#avatar').innerHTML='';
+    }
+
+    // Simple liveness: guide the user through motion steps and use FaceDetector when available
+    const stepsEl = $('#steps');
+    const stepOrder = ['up','down','right','left','blink'];
+    let currentStepIndex = 0; let detector=null; let lastBox=null; let blinkCounter=0;
+
+    async function setupDetector(){
+      if('FaceDetector' in window){ detector = new window.FaceDetector({fastMode:true,maxDetectedFaces:1}); }
+    }
+
+    async function runLiveness(){
+      currentStepIndex=0; blinkCounter=0; markSteps();
+      if(!mediaStream) await startCam();
+      await setupDetector();
+      const start = performance.now();
+
+      const loop = async () => {
+        if(currentStepIndex>=stepOrder.length){ livenessPassed=true; $('#finishAuth').disabled=false; return; }
+        const target = stepOrder[currentStepIndex];
+        if(detector){
+          try{
+            const det = await detector.detect(video);
+            if(det && det.length){
+              const box = det[0].boundingBox; // x,y,width,height
+              if(!lastBox) lastBox=box;
+              const dx=box.x - lastBox.x, dy=box.y - lastBox.y, dh=(box.height-lastBox.height);
+              const movedUp = dy < -3; const movedDown = dy > 3; const movedLeft = dx > 6; const movedRight = dx < -6;
+              // Fake blink via height/area change
+              const blinkish = Math.abs(dh) > 8;
+              if((target==='up'&&movedUp)||(target==='down'&&movedDown)||(target==='left'&&movedLeft)||(target==='right'&&movedRight)) advanceStep();
+              if(target==='blink' && blinkish){ blinkCounter++; if(blinkCounter>1) advanceStep(); }
+              lastBox=box;
+            }
+          }catch(e){ /* ignore */ }
+        }
+        // Fallback timeout: user can manually click step to confirm if detector not supported
+        if(performance.now()-start>60000){ breakLiveness('انتهى الوقت، يمكنك المحاولة مجدداً'); return; }
+        requestAnimationFrame(loop);
+      };
+      loop();
+    }
+
+    function advanceStep(){ currentStepIndex++; markSteps(); if(currentStepIndex>=stepOrder.length){ toast('تم التحقق الحيوي بنجاح'); livenessPassed=true; $('#finishAuth').disabled=false; } }
+    function markSteps(){ $$('.step', stepsEl).forEach(s=>s.classList.toggle('done', stepOrder.indexOf(s.dataset.step) < currentStepIndex)); }
+    function breakLiveness(msg){ alert(msg); currentStepIndex=0; markSteps(); }
+
+    stepsEl.addEventListener('click', (e)=>{ if(e.target.classList.contains('step')){ // manual confirm fallback
+      const idx = stepOrder.indexOf(e.target.dataset.step);
+      if(idx===currentStepIndex){ advanceStep(); }
+    }});
+
+    $('#startLiveness').addEventListener('click', runLiveness);
+    $('#captureBtn').addEventListener('click', captureSelfie);
+
+    // ====== Auth submit (store locally)
+    $('#authForm').addEventListener('submit', (e)=>{
+      e.preventDefault();
+      if(!selfieData){ return alert('الرجاء التقاط صورة سيلفي'); }
+      if(!livenessPassed){ return alert('الرجاء إكمال التحقق الحيوي'); }
+      const fullName=$('#fullName').value.trim();
+      const phone=$('#countryCode').value + $('#phone').value.trim();
+      const email=$('#email').value.trim();
+      const idType=document.querySelector('input[name="idType"]:checked')?.value||'';
+      const idFile=$('#idFile').files[0]?.name||'';
+      const user={fullName,phone,email,idType,idFile,selfie:selfieData};
+      localStorage.setItem('user', JSON.stringify(user));
+      if(!localStorage.getItem('coins')) localStorage.setItem('coins','5000');
+      hydrateProfile();
+      showMain(); showPage('home');
+    });
+
+    function hydrateProfile(){
+      const u = JSON.parse(localStorage.getItem('user')||'{}');
+      if(u.fullName) $('#displayName').textContent = u.fullName;
+      const coins = Number(localStorage.getItem('coins')||0);
+      $('#balance').textContent = coins.toLocaleString();
+      $('#walletBalance').textContent = coins.toLocaleString();
+      if(u.selfie){ $('#avatar').style.backgroundImage=`url(${u.selfie})`; $('#avatar').style.backgroundSize='cover'; $('#avatar').innerHTML=''; }
+    }
+
+    // ====== Navigation
+    $$('#logout').forEach?null:0; // placeholder to avoid tools warning
+    $('#logout').addEventListener('click',()=>{ localStorage.clear(); location.reload(); });
+    $$('.menu .btn').forEach(b=>b.addEventListener('click',()=>{
+      const page=b.dataset.page; if(page){ showPage(page); if(page==='wallet') hydrateProfile(); }
+    }));
+    $('[data-go="levels"]').addEventListener('click',()=>showPage('levels'));
+
+    // ====== Offers – coins (animated 3D)
+    const offersData = [
+      {qty:200, price:3.99},{qty:500, price:8.99},{qty:1200, price:18.99},{qty:2600, price:38.99},
+      {qty:5500, price:78.99},{qty:12000, price:149.99}
+    ];
+    const offersEl = $('#offers');
+    offersData.forEach(o=>{
+      const card=document.createElement('div'); card.className='coin-card';
+      card.innerHTML = `
+        <div class="coin3d">
+          <div class="face front"></div>
+          <div class="edge"></div>
+          <div class="face back"></div>
+        </div>
+        <div class="coin-title">${o.qty.toLocaleString()} كوينز</div>
+        <div class="coin-price">$${o.price.toFixed(2)}</div>
+        <button class="btn btn-primary buy">شراء</button>
+      `;
+      card.querySelector('.buy').addEventListener('click',()=>{
+        const cur=Number(localStorage.getItem('coins')||0)+o.qty; localStorage.setItem('coins',cur); hydrateProfile(); toast('تمت إضافة الكوينز');
+      });
+      offersEl.appendChild(card);
+    });
+
+    // ====== Levels -> Room (different table skins)
+    const levelToSkin = {
+      beginner:'felt-beginner', intermediate:'felt-intermediate', advanced:'felt-advanced', king:'felt-king'
+    };
+    $$('#page-levels [data-level]').forEach(btn=>btn.addEventListener('click',()=>{
+      const lvl=btn.dataset.level, table=$('#roomTable');
+      table.className = `table card ${levelToSkin[lvl]}`;
+      $('#kingRim').style.display = (lvl==='king')? 'block':'none';
+      showPage('room'); initRoom(lvl);
+    }));
+
+    // ====== Simple Poker Logic (front‑end demo – not multiplayer)
+    const ranks=['2','3','4','5','6','7','8','9','T','J','Q','K','A'];
+    const suits=['♠','♥','♦','♣'];
+    function newDeck(){ const d=[]; for(const r of ranks){ for(const s of suits){ d.push(r+s); } } return d; }
+    function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+    let deck=[], players=[{name:'Player 1'},{name:'Player 2'},{name:'Player 3'},{name:'You'}], community=[];
+
+    function initRoom(level){ deck=shuffle(newDeck()); community=[]; renderPlayers(true); $('#deal').disabled=false; $('#show').disabled=false; }
+
+    function renderPlayers(blank=false){
+      const wrap=$('#players'); wrap.innerHTML='';
+      const grid=document.createElement('div'); grid.style.cssText='display:grid;grid-template-columns:repeat(4,1fr);gap:10px;width:100%;padding:12px';
+      players.forEach((p,i)=>{
+        const el=document.createElement('div'); el.className='card'; el.style.padding='10px';
+        el.innerHTML = `
+          <div style="display:flex;justify-content:space-between;align-items:center"><strong>${p.name}</strong><span class="muted">$${(1000+i*300).toLocaleString()}</span></div>
+          <div style="display:flex;gap:6px;margin-top:8px">
+            ${blank? '<div class="hole" style="width:42px;height:60px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18)"></div><div class="hole" style="width:42px;height:60px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18)"></div>' : cardEl(p.hole[0])+cardEl(p.hole[1])}
+          </div>
+        `;
+        grid.appendChild(el);
+      });
+      wrap.appendChild(grid);
+      const board=document.createElement('div'); board.className='card'; board.style.cssText='margin-top:10px;padding:10px;display:flex;gap:8px;justify-content:center;align-items:center;min-height:84px';
+      board.id='board'; board.innerHTML = community.length? community.map(cardEl).join('') : '<span class="muted">الطاولة (Community Cards)</span>';
+      wrap.appendChild(board);
+    }
+
+    function cardEl(c){
+      const red = c.includes('♥')||c.includes('♦');
+      return `<div style="width:42px;height:60px;border-radius:8px;background:#fff;color:${red?'#c1121f':'#111'};display:grid;place-items:center;font-weight:800;border:1px solid #d9d9d9">${c}</div>`;
+    }
+
+    function deal(){ players.forEach(p=>{ p.hole=[deck.pop(),deck.pop()]; }); renderPlayers(); }
+    function flop(){ community=[deck.pop(),deck.pop(),deck.pop()]; $('#board').innerHTML=community.map(cardEl).join(''); }
+    function turn(){ community.push(deck.pop()); $('#board').innerHTML=community.map(cardEl).join(''); }
+    function river(){ community.push(deck.pop()); $('#board').innerHTML=community.map(cardEl).join(''); }
+
+    $('#deal').addEventListener('click',()=>{ deal(); setTimeout(flop,800); setTimeout(turn,1600); setTimeout(river,2400); });
+    $('#reset').addEventListener('click',()=>{ initRoom('beginner'); });
+    $('#show').addEventListener('click',()=>{ // naive evaluate – demo only
+      toast('تم الكشف – التقييم التفصيلي قيد التطوير');
+    });
+
+    // ====== Chat (local)
+    $('#sendChat').addEventListener('click',()=>{
+      const t=$('#chatInput').value.trim(); if(!t) return; const div=document.createElement('div');
+      div.textContent = t; $('#chatLog').appendChild(div); $('#chatInput').value='';
+    });
+
+    // ====== Toast helper
+    function toast(msg){ const t=document.createElement('div'); t.textContent=msg; t.style.cssText='position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.8);color:#fff;padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.18);z-index:9999'; document.body.appendChild(t); setTimeout(()=>t.remove(),1800); }
+
+    // ====== Init
+    (function init(){
+      // restore
+      const u = localStorage.getItem('user'); if(u){ hydrateProfile(); showMain(); showPage('home'); } else { startCam(); }
+    })();
+  </script>
+</body>
+</html>
